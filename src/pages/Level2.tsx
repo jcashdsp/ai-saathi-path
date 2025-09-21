@@ -10,6 +10,8 @@ import { Link } from "react-router-dom";
 import Level2Lesson1 from "@/components/lessons/Level2Lesson1";
 import Level2Lesson2 from "@/components/lessons/Level2Lesson2";
 import Level2Lesson3 from "@/components/lessons/Level2Lesson3";
+import Level2Lesson4 from "@/components/lessons/Level2Lesson4";
+import Level2Lesson5 from "@/components/lessons/Level2Lesson5";
 
 const Level2 = () => {
   const [currentLesson, setCurrentLesson] = useState<number | null>(null);
@@ -45,16 +47,16 @@ const Level2 = () => {
       title: "Shopkeeper Ad Project",
       description: "Create your first AI-powered business advertisement",
       duration: "20-25 min",
-      status: "coming-soon",
-      component: null
+      status: "available",
+      component: Level2Lesson4
     },
     {
       id: 5,
       title: "Review & Practice",
       description: "Consolidate skills and prepare for Level 3",
       duration: "10-15 min",
-      status: "coming-soon",
-      component: null
+      status: "available",
+      component: Level2Lesson5
     }
   ];
 
