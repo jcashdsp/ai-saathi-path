@@ -140,7 +140,9 @@ const LearningLevels = () => {
                     className="w-full mt-6" 
                     variant={level.id === 1 || level.id === 2 ? "default" : "outline"}
                     onClick={() => {
-                      if (level.id === 2) {
+                      if (level.id === 1) {
+                        window.location.href = '/level-1';
+                      } else if (level.id === 2) {
                         window.location.href = '/level-2';
                       }
                     }}
@@ -159,7 +161,7 @@ const LearningLevels = () => {
         </div>
 
         <div className="text-center mt-16">
-          <Button size="lg" className="px-8 py-6 text-lg">
+          <Button size="lg" className="px-8 py-6 text-lg" onClick={() => window.location.href = '/auth'}>
             Start Your Journey Today
             <ArrowRight className="ml-2 h-5 w-5" />
           </Button>

@@ -27,7 +27,7 @@ const Hero = () => {
             </div>
 
             <div className="flex flex-col sm:flex-row gap-4">
-              <Button size="lg" variant="secondary" className="text-lg px-8 py-6">
+              <Button size="lg" variant="secondary" className="text-lg px-8 py-6" onClick={() => window.location.href = '/level-1'}>
                 Start Learning Free <ArrowRight className="ml-2 h-5 w-5" />
               </Button>
               <Button size="lg" variant="outline" className="text-lg px-8 py-6 border-primary-foreground text-primary-foreground hover:bg-primary-foreground hover:text-primary">

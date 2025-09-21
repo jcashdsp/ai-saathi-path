@@ -8,9 +8,9 @@ const Navigation = () => {
   const toggleMenu = () => setIsOpen(!isOpen);
 
   const navItems = [
-    { name: "Courses", href: "#courses", icon: BookOpen },
-    { name: "Community", href: "#community", icon: Users },
-    { name: "Progress", href: "#progress", icon: Trophy },
+    { name: "Courses", href: "/courses", icon: BookOpen },
+    { name: "Community", href: "/community", icon: Users },
+    { name: "Progress", href: "/progress", icon: Trophy },
   ];
 
   return (
@@ -49,10 +49,10 @@ const Navigation = () => {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center space-x-4">
-            <Button variant="ghost" size="sm">
+            <Button variant="ghost" size="sm" onClick={() => window.location.href = '/auth'}>
               Login
             </Button>
-            <Button size="sm">
+            <Button size="sm" onClick={() => window.location.href = '/auth'}>
               Sign Up Free
             </Button>
           </div>
