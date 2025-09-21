@@ -20,12 +20,12 @@ const learningLevels = [
     id: 2,
     title: "Talking to AI", 
     subtitle: "Communication Skills",
-    description: "Learn to ask effective questions and communicate with AI systems",
-    duration: "75 mins",
+    description: "Master AI communication: debunk myths, ask smart questions, translate languages, and create business ads",
+    duration: "90 mins",
     lessons: 5,
     icon: MessageCircle,
     color: "level-2", 
-    topics: ["What is AI?", "Good Questions", "Translate & Simplify", "Shopkeeper Ads"],
+    topics: ["AI Myths vs Reality", "CLEAR Question Method", "Translate & Simplify", "Shopkeeper Ad Project", "Family Business Helper"],
     completed: false
   },
   {
@@ -138,9 +138,14 @@ const LearningLevels = () => {
 
                   <Button 
                     className="w-full mt-6" 
-                    variant={level.id === 1 ? "default" : "outline"}
+                    variant={level.id === 1 || level.id === 2 ? "default" : "outline"}
+                    onClick={() => {
+                      if (level.id === 2) {
+                        window.location.href = '/level-2';
+                      }
+                    }}
                   >
-                    {level.id === 1 ? "Start Here" : "Coming Soon"}
+                    {level.id === 1 ? "Start Here" : level.id === 2 ? "Start Level 2" : "Coming Soon"}
                   </Button>
                 </CardContent>
 
