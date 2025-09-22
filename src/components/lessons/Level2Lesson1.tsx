@@ -1,18 +1,169 @@
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { CheckCircle, Clock, AlertTriangle, Lightbulb, Users, Zap } from "lucide-react";
+import { CheckCircle, Clock, AlertTriangle, Lightbulb, Users, Zap, ArrowLeft, ArrowRight } from "lucide-react";
+import { TrueFalseQuiz, type TrueFalseQuestion } from "@/components/quiz/TrueFalseQuiz";
+import { completeLesson, getLessonProgress } from "@/lib/progress";
 
-const Level2Lesson1 = () => {
+interface Level2Lesson1Props {
+  onComplete?: () => void;
+  onBack?: () => void;
+}
+
+const Level2Lesson1: React.FC<Level2Lesson1Props> = ({ onComplete, onBack }) => {
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [quizCompleted, setQuizCompleted] = useState(false);
+  const [startTime] = useState(Date.now());
+  
+  const lessonProgress = getLessonProgress(2, "lesson-1");
+
+  // Quiz questions based on the myth vs reality content
+  const quizQuestions: TrueFalseQuestion[] = [
+    {
+      id: "q1",
+      question: "AI has feelings and consciousness like humans do",
+      correct: false,
+      explanation: "AI is an advanced calculator that follows patterns - it has no emotions or awareness. It processes data and generates responses but doesn't experience feelings.",
+      context: "AI Nature"
+    },
+    {
+      id: "q2", 
+      question: "AI chatbots are already helping banks in Pakistan answer customer questions 24/7",
+      correct: true,
+      explanation: "Yes! HBL and other Pakistani banks use AI chatbots to help customers with basic questions anytime. This is a real-world application of AI in Pakistan today.",
+      context: "Pakistani AI Use"
+    },
+    {
+      id: "q3",
+      question: "AI always gives 100% correct answers and never makes mistakes",
+      correct: false,
+      explanation: "AI can make errors, especially with local information or new situations. It's only as good as the data it was trained on and should always be double-checked.",
+      context: "AI Limitations"
+    },
+    {
+      id: "q4",
+      question: "You need to be a programmer to ask AI questions and get useful answers",
+      correct: false,
+      explanation: "Anyone who can type a question can benefit from AI tools. You don't need programming knowledge to use ChatGPT, Google Translate, or other AI applications.",
+      context: "AI Accessibility"
+    },
+    {
+      id: "q5",
+      question: "AI can translate between Urdu and English instantly",
+      correct: true,
+      explanation: "Yes! Google Translate, Microsoft Translator, and other AI tools can translate between Urdu and English in real-time, helping with communication and learning.",
+      context: "Translation AI"
+    }
+  ];
+
+  const handleQuizComplete = (score: number, correct: number, answers: any[]) => {
+    setQuizCompleted(true);
+    const timeSpent = Date.now() - startTime;
+    
+    // Save lesson completion with quiz result
+    completeLesson(2, "lesson-1", {
+      score,
+      totalQuestions: quizQuestions.length,
+      correct,
+      passed: score >= 70,
+      timeSpent,
+      answers
+    }, timeSpent);
+
+    // Auto-advance after a short delay if passed
+    if (score >= 70) {
+      setTimeout(() => {
+        onComplete?.();
+      }, 2000);
+    }
+  };
+
+  const handleStartQuiz = () => {
+    setShowQuiz(true);
+  };
+
+  const handleBackToLesson = () => {
+    setShowQuiz(false);
+    setQuizCompleted(false);
+  };
+
+  if (showQuiz) {
+    return (
+      <div className="min-h-screen bg-background py-8">
+        <div className="container mx-auto px-4 max-w-4xl">
+          {/* Header */}
+          <div className="text-center mb-8">
+            <Button
+              variant="ghost"
+              onClick={handleBackToLesson}
+              className="mb-4"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Lesson
+            </Button>
+            
+            <Badge variant="outline" className="mb-4">
+              Level 2 • Lesson 1 • Quiz
+            </Badge>
+            <h1 className="text-2xl md:text-3xl font-bold text-foreground mb-2">
+              Test Your AI Knowledge
+            </h1>
+            <p className="text-muted-foreground">
+              Let's see how well you can separate AI myths from reality
+            </p>
+          </div>
+
+          <TrueFalseQuiz
+            questions={quizQuestions}
+            title="Myth vs Reality Quiz"
+            description="Identify whether each statement is a myth or reality about AI"
+            onComplete={handleQuizComplete}
+            passingScore={70}
+          />
+
+          {quizCompleted && (
+            <div className="mt-8 text-center">
+              <Button onClick={onComplete} size="lg" className="mr-4">
+                Continue to Next Lesson <ArrowRight className="ml-2 h-4 w-4" />
+              </Button>
+              <Button variant="outline" onClick={handleBackToLesson}>
+                Review Lesson
+              </Button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background py-8">
       <div className="container mx-auto px-4 max-w-4xl">
         {/* Header */}
         <div className="text-center mb-8">
-          <Badge variant="outline" className="mb-4">
-            Level 2 • Lesson 1
-          </Badge>
+          <div className="flex items-center justify-center gap-4 mb-4">
+            <Button
+              variant="ghost"
+              onClick={onBack}
+              size="sm"
+            >
+              <ArrowLeft className="h-4 w-4 mr-2" />
+              Back to Level 2
+            </Button>
+            
+            <Badge variant="outline">
+              Level 2 • Lesson 1
+            </Badge>
+
+            {lessonProgress?.completed && (
+              <Badge className="bg-success text-success-foreground">
+                ✅ Completed
+              </Badge>
+            )}
+          </div>
+          
           <h1 className="text-3xl md:text-4xl font-bold text-foreground mb-4">
             Myth vs Reality of AI
           </h1>
@@ -206,43 +357,6 @@ const Level2Lesson1 = () => {
           </CardContent>
         </Card>
 
-        {/* Interactive Exercise */}
-        <Card className="mb-8">
-          <CardHeader>
-            <CardTitle>🎮 Interactive Exercise: Myth Detector</CardTitle>
-            <CardDescription>
-              Test your understanding by identifying myths vs realities
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-4">
-              <p className="text-sm text-muted-foreground">
-                Read each statement and decide if it's a MYTH or REALITY:
-              </p>
-              
-              {[
-                { statement: "AI can feel happy or sad like humans", correct: "myth" },
-                { statement: "AI chatbots help banks answer customer questions", correct: "reality" },
-                { statement: "AI always gives 100% correct answers", correct: "myth" },
-                { statement: "You need to be a programmer to ask AI questions", correct: "myth" },
-                { statement: "AI can translate between Urdu and English instantly", correct: "reality" }
-              ].map((item, index) => (
-                <div key={index} className="border border-border rounded-lg p-4">
-                  <p className="text-sm font-medium mb-3">"{item.statement}"</p>
-                  <div className="flex gap-2">
-                    <Button size="sm" variant="outline" className="text-xs">
-                      MYTH
-                    </Button>
-                    <Button size="sm" variant="outline" className="text-xs">
-                      REALITY
-                    </Button>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </CardContent>
-        </Card>
-
         {/* Success Indicators */}
         <Card className="mb-8">
           <CardHeader>
@@ -273,14 +387,38 @@ const Level2Lesson1 = () => {
           </CardContent>
         </Card>
 
+        {/* Quiz Call to Action */}
+        <Card className="mb-8 border-primary/20 bg-primary/5">
+          <CardHeader>
+            <CardTitle>🎯 Ready to Test Your Knowledge?</CardTitle>
+            <CardDescription>
+              Take the quiz to see how well you understand AI myths vs reality
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="text-center">
+              <Button onClick={handleStartQuiz} size="lg" className="px-8">
+                Start Quiz
+              </Button>
+              <p className="text-xs text-muted-foreground mt-2">
+                Need 70% or higher to pass
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+
         {/* Navigation */}
         <div className="flex justify-between items-center">
-          <Button variant="outline">
-            ← Back to Level 2
+          <Button variant="outline" onClick={onBack}>
+            <ArrowLeft className="mr-2 h-4 w-4" />
+            Back to Level 2
           </Button>
-          <Button>
-            Next: How to Ask Questions →
-          </Button>
+          {lessonProgress?.completed && (
+            <Button onClick={onComplete}>
+              Next: How to Ask Questions
+              <ArrowRight className="ml-2 h-4 w-4" />
+            </Button>
+          )}
         </div>
       </div>
     </div>
