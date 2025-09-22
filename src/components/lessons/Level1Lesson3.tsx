@@ -129,30 +129,38 @@ const Level1Lesson3 = ({ onComplete, onBack }: Level1Lesson3Props) => {
     }
   ];
 
-  const quizData = {
-    instructions: getTranslation({ 
-      english: "Match each 'IF' condition with its correct 'THEN' action", 
-      urdu: "ہر 'اگر' شرط کو اس کے صحیح 'تو پھر' عمل سے ملائیں" 
-    }, language),
-    pairs: [
-      {
-        left: getTranslation({ english: "IF: Ramadan month starts", urdu: "اگر: رمضان کا مہینہ شروع ہو" }, language),
-        right: getTranslation({ english: "THEN: Change daily routine for sehri/iftar", urdu: "تو: سحری/افطار کے لیے روزانہ کا معمول بدلیں" }, language)
-      },
-      {
-        left: getTranslation({ english: "IF: Phone battery below 20%", urdu: "اگر: فون کی بیٹری 20% سے کم" }, language),
-        right: getTranslation({ english: "THEN: Turn on power saving mode", urdu: "تو: پاور سیونگ موڈ آن کریں" }, language)
-      },
-      {
-        left: getTranslation({ english: "IF: Rain starts in Karachi", urdu: "اگر: کراچی میں بارش شروع ہو" }, language),
-        right: getTranslation({ english: "THEN: Traffic jams increase everywhere", urdu: "تو: ہر جگہ ٹریفک جام بڑھ جاتا ہے" }, language)
-      },
-      {
-        left: getTranslation({ english: "IF: Biryani is cooking", urdu: "اگر: بریانی پک رہی ہو" }, language),
-        right: getTranslation({ english: "THEN: Whole house smells amazing", urdu: "تو: پورے گھر میں زبردست خوشبو آتی ہے" }, language)
-      }
-    ]
-  };
+  const quizQuestions = [
+    {
+      id: "match1",
+      title: getTranslation({ english: "Match Logic Pairs", urdu: "منطق کے جوڑے ملائیں" }, language),
+      instructions: getTranslation({ 
+        english: "Match each 'IF' condition with its correct 'THEN' action", 
+        urdu: "ہر 'اگر' شرط کو اس کے صحیح 'تو پھر' عمل سے ملائیں" 
+      }, language),
+      pairs: [
+        {
+          id: "pair-0",
+          left: getTranslation({ english: "IF: Ramadan month starts", urdu: "اگر: رمضان کا مہینہ شروع ہو" }, language),
+          right: getTranslation({ english: "THEN: Change daily routine for sehri/iftar", urdu: "تو: سحری/افطار کے لیے روزانہ کا معمول بدلیں" }, language)
+        },
+        {
+          id: "pair-1",
+          left: getTranslation({ english: "IF: Phone battery below 20%", urdu: "اگر: فون کی بیٹری 20% سے کم" }, language),
+          right: getTranslation({ english: "THEN: Turn on power saving mode", urdu: "تو: پاور سیونگ موڈ آن کریں" }, language)
+        },
+        {
+          id: "pair-2",
+          left: getTranslation({ english: "IF: Rain starts in Karachi", urdu: "اگر: کراچی میں بارش شروع ہو" }, language),
+          right: getTranslation({ english: "THEN: Traffic jams increase everywhere", urdu: "تو: ہر جگہ ٹریفک جام بڑھ جاتا ہے" }, language)
+        },
+        {
+          id: "pair-3",
+          left: getTranslation({ english: "IF: Biryani is cooking", urdu: "اگر: بریانی پک رہی ہو" }, language),
+          right: getTranslation({ english: "THEN: Whole house smells amazing", urdu: "تو: پورے گھر میں زبردست خوشبو آتی ہے" }, language)
+        }
+      ]
+    }
+  ];
 
   const progress = ((currentStep + 1) / steps.length) * 100;
 
@@ -181,7 +189,7 @@ const Level1Lesson3 = ({ onComplete, onBack }: Level1Lesson3Props) => {
       const timeSpent = Date.now() - startTime;
       const quizResult = {
         score: score,
-        totalQuestions: quizData.pairs.length,
+        totalQuestions: quizQuestions.length,
         correct: correct,
         passed: score >= 70,
         timeSpent,
@@ -204,9 +212,9 @@ const Level1Lesson3 = ({ onComplete, onBack }: Level1Lesson3Props) => {
       <LessonCompletion
         levelId={1}
         lessonId="lesson3"
+        lessonTitle="If-This-Then-That Logic"
         score={quizScore}
-        onNext={handleLessonComplete}
-        language={language}
+        onContinue={handleLessonComplete}
       />
     );
   }
@@ -409,8 +417,7 @@ const Level1Lesson3 = ({ onComplete, onBack }: Level1Lesson3Props) => {
 
               {currentStepData.type === "quiz" && !quizCompleted && (
                 <MixMatchQuiz
-                  instructions={quizData.instructions}
-                  pairs={quizData.pairs}
+                  questions={quizQuestions}
                   onComplete={handleQuizComplete}
                   title={getTranslation({ english: "If-This-Then-That Logic Quiz", urdu: "اگر یہ تو پھر وہ منطق کوئز" }, language)}
                 />

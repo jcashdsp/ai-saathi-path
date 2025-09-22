@@ -83,39 +83,36 @@ const Level1Lesson1 = ({ onComplete, onBack }: Level1Lesson1Props) => {
 
   const quizData = [
     {
-      id: 1,
+      id: "1",
       question: getTranslation({ 
         english: "What does a right-click on the mouse do?", 
         urdu: "ماؤس پر دائیں کلک کیا کرتا ہے؟" 
       }, language),
       correct: true,
-      correctAnswer: true,
       explanation: getTranslation({ 
         english: "Right-click opens context menus with additional options", 
         urdu: "دائیں کلک اضافی اختیارات کے ساتھ سیاق مینو کھولتا ہے" 
       }, language)
     },
     {
-      id: 2,
+      id: "2",
       question: getTranslation({ 
         english: "Ctrl + C is used to copy content", 
         urdu: "Ctrl + C مواد کاپی کرنے کے لیے استعمال ہوتا ہے" 
       }, language),
       correct: true,
-      correctAnswer: true,
       explanation: getTranslation({ 
         english: "Correct! Ctrl + C is the universal copy shortcut", 
         urdu: "درست! Ctrl + C یونیورسل کاپی شارٹ کٹ ہے" 
       }, language)
     },
     {
-      id: 3,
+      id: "3",
       question: getTranslation({ 
         english: "Double-clicking always deletes files", 
         urdu: "ڈبل کلک کرنا ہمیشہ فائلیں حذف کرتا ہے" 
       }, language),
       correct: false,
-      correctAnswer: false,
       explanation: getTranslation({ 
         english: "False! Double-clicking opens files and folders, it doesn't delete them", 
         urdu: "غلط! ڈبل کلک فائلیں اور فولڈرز کھولتا ہے، انہیں حذف نہیں کرتا" 
@@ -173,9 +170,9 @@ const Level1Lesson1 = ({ onComplete, onBack }: Level1Lesson1Props) => {
       <LessonCompletion
         levelId={1}
         lessonId="lesson1"
+        lessonTitle="Mouse & Keyboard Mastery"
         score={quizScore}
-        onNext={handleLessonComplete}
-        language={language}
+        onContinue={handleLessonComplete}
       />
     );
   }
