@@ -3,7 +3,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { Badge } from "@/components/ui/badge";
-import { CheckCircle, XCircle, ArrowRight } from "lucide-react";
+import { CheckCircle, XCircle, ArrowRight, Star, Sparkles } from "lucide-react";
+import { useLanguage } from "@/contexts/LanguageContext";
+import BilingualText from "@/components/BilingualText";
+import { culturalPhrases } from "@/lib/translations";
 
 export interface MultipleChoiceQuestion {
   id: string;
@@ -83,43 +86,85 @@ export const MultipleChoiceQuiz: React.FC<MultipleChoiceQuizProps> = ({
   const finalScore = quizCompleted ? Math.round((correctAnswers / questions.length) * 100) : 0;
 
   if (quizCompleted) {
+    const isPassed = finalScore >= passingScore;
+    const celebrationMessage = isPassed ? culturalPhrases.congratulations : culturalPhrases.tryAgain;
+    const encouragementMessage = isPassed ? culturalPhrases.wellDone : culturalPhrases.keepGoing;
+
     return (
-      <Card className="border-success/20 bg-success/5">
-        <CardHeader className="text-center">
-          <div className="w-16 h-16 bg-success rounded-full flex items-center justify-center mx-auto mb-4">
-            <CheckCircle className="h-8 w-8 text-success-foreground" />
+      <Card className={`border-2 ${isPassed ? 'border-success/20 bg-success/5 truck-art-border celebration-glow' : 'border-warning/20 bg-warning/5'}`}>
+        <CardHeader className="text-center islamic-pattern">
+          <div className={`w-20 h-20 rounded-full flex items-center justify-center mx-auto mb-4 ${
+            isPassed ? 'bg-gradient-cultural' : 'bg-gradient-to-br from-warning to-warning/80'
+          }`}>
+            {isPassed ? (
+              <div className="flex items-center gap-1">
+                <Star className="h-8 w-8 text-white" />
+                <Sparkles className="h-6 w-6 text-white" />
+              </div>
+            ) : (
+              <XCircle className="h-8 w-8 text-white" />
+            )}
           </div>
-          <CardTitle>
-            {finalScore >= passingScore ? "🎉 Quiz Completed!" : "Quiz Finished"}
-          </CardTitle>
-          <CardDescription>
-            {finalScore >= passingScore 
-              ? `Excellent work! You scored ${finalScore}%` 
-              : `You scored ${finalScore}%. Keep practicing!`
-            }
-          </CardDescription>
+          
+          <div className="space-y-2">
+            <CardTitle className="text-2xl">
+              {isPassed ? "🎉✨🌙" : "📚💪"} 
+              <BilingualText 
+                translation={celebrationMessage}
+                className="inline-block ml-2"
+                englishClassName="text-xl font-bold"
+                urduClassName="text-lg font-urdu font-bold text-cultural-emerald"
+              />
+            </CardTitle>
+            <CardDescription>
+              <BilingualText 
+                translation={encouragementMessage}
+                englishClassName="text-base"
+                urduClassName="font-urdu text-base text-muted-foreground"
+              />
+              <div className="mt-2 text-sm">
+                {isPassed 
+                  ? `Score: ${finalScore}% - بہترین!` 
+                  : `Score: ${finalScore}% - مزید محنت کریں!`
+                }
+              </div>
+            </CardDescription>
+          </div>
         </CardHeader>
-        <CardContent className="text-center space-y-4">
-          <div className="grid grid-cols-2 gap-4 max-w-md mx-auto">
-            <div className="text-center">
-              <div className="text-2xl font-bold text-success">{correctAnswers}</div>
-              <div className="text-sm text-muted-foreground">Correct</div>
+        
+        <CardContent className="text-center space-y-6">
+          <div className="grid grid-cols-2 gap-6 max-w-md mx-auto">
+            <div className="text-center p-4 rounded-lg bg-gradient-to-br from-cultural-gold/10 to-cultural-emerald/10">
+              <div className="text-3xl font-bold text-cultural-emerald">{correctAnswers}</div>
+              <div className="text-sm text-muted-foreground font-urdu-ltr">
+                Correct / درست
+              </div>
             </div>
-            <div className="text-center">
-              <div className="text-2xl font-bold text-foreground">{finalScore}%</div>
-              <div className="text-sm text-muted-foreground">Score</div>
+            <div className="text-center p-4 rounded-lg bg-gradient-to-br from-truck-art-blue/10 to-pakistan-green/10">
+              <div className="text-3xl font-bold text-pakistan-green">{finalScore}%</div>
+              <div className="text-sm text-muted-foreground font-urdu-ltr">
+                Score / اسکور
+              </div>
             </div>
           </div>
           
-          {finalScore >= passingScore && (
-            <Badge className="bg-success text-success-foreground">
-              ✅ Passed! Keep going!
-            </Badge>
-          )}
-          
-          {finalScore < passingScore && (
-            <div className="text-sm text-muted-foreground">
-              Need {passingScore}% to pass. Review the lesson and try again!
+          {isPassed ? (
+            <div className="space-y-3">
+              <Badge className="bg-gradient-cultural text-white px-6 py-2 text-base">
+                ✅ Passed! / کامیاب! 🌟
+              </Badge>
+              <div className="text-sm text-cultural-emerald font-medium">
+                شاندار! You've mastered this topic! 🎊
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-3">
+              <Badge variant="outline" className="border-warning text-warning px-6 py-2">
+                📖 Review & Try Again / نظرثانی کریں
+              </Badge>
+              <div className="text-sm text-muted-foreground">
+                Need {passingScore}% to pass / کامیابی کے لیے {passingScore}% درکار
+              </div>
             </div>
           )}
         </CardContent>

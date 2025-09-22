@@ -83,6 +83,46 @@ export const translations = {
   }
 };
 
+// Cultural phrases and celebrations
+export const culturalPhrases = {
+  excellent: { english: "Excellent!", urdu: "شاباش!" },
+  congratulations: { english: "Congratulations!", urdu: "مبارک ہو!" },
+  wellDone: { english: "Well done!", urdu: "بہت خوب!" },
+  amazing: { english: "Amazing!", urdu: "کمال!" },
+  praise: { english: "Well done!", urdu: "آفرین!" },
+  keepGoing: { english: "Keep going!", urdu: "جاری رکھیں!" },
+  youPassed: { english: "You passed!", urdu: "آپ کامیاب ہو گئے!" },
+  tryAgain: { english: "Try again!", urdu: "دوبارہ کوشش کریں!" },
+  goodMorning: { english: "Good morning", urdu: "صبح بخیر" },
+  goodEvening: { english: "Good evening", urdu: "شام بخیر" },
+  scholar: { english: "Scholar", urdu: "عالم" },
+  helper: { english: "Helper", urdu: "مددگار" },
+  leader: { english: "Leader", urdu: "رہنما" },
+  champion: { english: "Champion", urdu: "چیمپیئن" }
+};
+
+// Pakistani cultural examples for lessons
+export const culturalExamples = {
+  shopTypes: [
+    { english: "Fruit vendor", urdu: "پھل فروش" },
+    { english: "Tea stall", urdu: "چائے کی دکان" },
+    { english: "Clothing shop", urdu: "کپڑوں کی دکان" },
+    { english: "Mobile shop", urdu: "موبائل کی دکان" },
+    { english: "Pharmacy", urdu: "دوا خانہ" },
+    { english: "Grocery store", urdu: "کریانہ کی دکان" }
+  ],
+  festivals: [
+    { english: "Eid celebration", urdu: "عید کا جشن" },
+    { english: "Ramadan timing", urdu: "رمضان کا وقت" },
+    { english: "Independence Day", urdu: "یوم آزادی" },
+    { english: "Basant festival", urdu: "بسنت کا تہوار" }
+  ],
+  pakistaniNames: ["Ali", "Sana", "Ahmed", "Ayesha", "Hassan", "Fatima", "Omar", "Zainab"],
+  cities: ["Karachi", "Lahore", "Islamabad", "Faisalabad", "Rawalpindi", "Multan", "Peshawar", "Quetta"],
+  banks: ["HBL", "UBL", "MCB", "ABL", "Standard Chartered", "Meezan Bank"],
+  paymentMethods: ["JazzCash", "Easypaisa", "SadaPay", "Bank transfer"]
+};
+
 // Quiz Data
 export const level1Lesson2QuizData = [
   {
