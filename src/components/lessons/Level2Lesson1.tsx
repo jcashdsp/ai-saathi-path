@@ -6,6 +6,10 @@ import { Separator } from "@/components/ui/separator";
 import { CheckCircle, Clock, AlertTriangle, Lightbulb, Users, Zap, ArrowLeft, ArrowRight } from "lucide-react";
 import { TrueFalseQuiz, type TrueFalseQuestion } from "@/components/quiz/TrueFalseQuiz";
 import { completeLesson, getLessonProgress } from "@/lib/progress";
+import { VideoPlayer } from "@/components/media/VideoPlayer";
+import { AudioPronunciation } from "@/components/media/AudioPronunciation";
+import { InteractiveTranscript } from "@/components/media/InteractiveTranscript";
+import { SubtitleToggle } from "@/components/media/SubtitleToggle";
 
 interface Level2Lesson1Props {
   onComplete?: () => void;
@@ -16,8 +20,42 @@ const Level2Lesson1: React.FC<Level2Lesson1Props> = ({ onComplete, onBack }) => 
   const [showQuiz, setShowQuiz] = useState(false);
   const [quizCompleted, setQuizCompleted] = useState(false);
   const [startTime] = useState(Date.now());
+  const [currentLanguage, setCurrentLanguage] = useState<'english' | 'urdu'>('english');
+  const [showSubtitles, setShowSubtitles] = useState(true);
   
   const lessonProgress = getLessonProgress(2, "lesson-1");
+
+  // Sample video transcript data
+  const transcriptSegments = [
+    {
+      id: "intro",
+      startTime: 0,
+      endTime: 45,
+      text: "Welcome to our lesson on AI myths versus reality. Today we'll explore what AI really is and what it's not.",
+      urduText: "AI کے بارے میں غلط فہمیوں اور حقائق کے اس سبق میں خوش آمدید۔ آج ہم جانیں گے کہ AI واقعی کیا ہے اور کیا نہیں۔"
+    },
+    {
+      id: "myth1",
+      startTime: 45,
+      endTime: 120,
+      text: "One of the biggest myths is that AI has consciousness and feelings like humans. This simply isn't true.",
+      urduText: "سب سے بڑی غلط فہمی یہ ہے کہ AI میں انسانوں کی طرح شعور اور جذبات ہیں۔ یہ بالکل غلط ہے۔"
+    },
+    {
+      id: "reality1",
+      startTime: 120,
+      endTime: 180,
+      text: "AI is actually an advanced calculator that recognizes patterns in data to make predictions and generate responses.",
+      urduText: "AI درحقیقت ایک ایڈوانس کیلکولیٹر ہے جو ڈیٹا میں پیٹرن پہچان کر پیش گوئیاں اور جوابات بناتا ہے۔"
+    },
+    {
+      id: "pakistan",
+      startTime: 180,
+      endTime: 240,
+      text: "Here in Pakistan, banks like HBL are already using AI chatbots to help customers 24/7 with their banking questions.",
+      urduText: "یہاں پاکستان میں، HBL جیسے بینک پہلے سے ہی AI چیٹ بوٹس استعمال کر رہے ہیں گاہکوں کی مدد کے لیے۔"
+    }
+  ];
 
   // Quiz questions based on the myth vs reality content
   const quizQuestions: TrueFalseQuestion[] = [
@@ -194,27 +232,42 @@ const Level2Lesson1: React.FC<Level2Lesson1Props> = ({ onComplete, onBack }) => 
           </CardContent>
         </Card>
 
-        {/* Video Section */}
+        {/* Enhanced Video Section */}
         <Card className="mb-8">
           <CardHeader>
             <CardTitle>📹 Video Lesson</CardTitle>
             <CardDescription>
-              Watch the full lesson with English audio and Urdu/Hindi subtitles
+              Learn about AI myths and reality with examples from Pakistan
             </CardDescription>
           </CardHeader>
-          <CardContent>
-            <div className="aspect-video bg-muted rounded-lg flex items-center justify-center mb-4">
-              <div className="text-center">
-                <div className="h-16 w-16 bg-level-2 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <div className="h-6 w-6 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                </div>
-                <p className="text-muted-foreground">Video player loading...</p>
-                <p className="text-xs text-muted-foreground mt-1">
-                  Available in: English (Audio) | اردو/हिंदी (Subtitles)
-                </p>
-              </div>
-            </div>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
+          <CardContent className="space-y-4">
+            {/* Subtitle Controls */}
+            <SubtitleToggle
+              currentLanguage={currentLanguage}
+              onLanguageChange={setCurrentLanguage}
+              showSubtitles={showSubtitles}
+              onToggleSubtitles={setShowSubtitles}
+            />
+            
+            {/* Video Player */}
+            <VideoPlayer
+              videoUrl="dQw4w9WgXcQ" // Sample YouTube video ID - replace with actual educational content
+              title="AI Myths vs Reality: A Pakistani Perspective"
+              description="Understanding what AI really is and how it's being used in Pakistan today"
+            />
+            
+            {/* Interactive Transcript */}
+            <InteractiveTranscript
+              segments={transcriptSegments}
+              title="Video Transcript"
+              showUrdu={currentLanguage === 'urdu'}
+              onSeekTo={(time) => {
+                // In a real implementation, this would seek the video to the specified time
+                console.log(`Seeking to ${time} seconds`);
+              }}
+            />
+            
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm mt-4">
               <div className="flex items-center gap-2">
                 <div className="h-2 w-2 bg-success rounded-full"></div>
                 Introduction (2 min)
@@ -240,57 +293,166 @@ const Level2Lesson1: React.FC<Level2Lesson1Props> = ({ onComplete, onBack }) => 
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
-            {[
-              {
-                myth: "AI is like a human brain with feelings and consciousness",
-                reality: "AI is an advanced calculator that follows patterns - no emotions or awareness",
-                icon: "🧠"
-              },
-              {
-                myth: "AI will take all our jobs and replace humans completely",
-                reality: "AI changes work and creates new jobs like AI trainers, supervisors, and engineers",
-                icon: "💼"
-              },
-              {
-                myth: "AI knows everything and never makes mistakes",
-                reality: "AI only knows what it's trained on and can make errors, especially with local info",
-                icon: "🎯"
-              },
-              {
-                myth: "AI is dangerous like in movies (robots taking over)",
-                reality: "AI is a helpful tool for education, healthcare, business when used responsibly",
-                icon: "🛡️"
-              },
-              {
-                myth: "Only tech experts and programmers can use AI",
-                reality: "Anyone who can type a question can benefit from AI tools",
-                icon: "👥"
-              },
-              {
-                myth: "AI is only available in English and for foreign countries",
-                reality: "AI works in Urdu, Hindi, and helps with local Pakistani problems",
-                icon: "🌍"
-              }
-            ].map((item, index) => (
-              <div key={index} className="border border-border rounded-lg p-4">
-                <div className="grid md:grid-cols-2 gap-4">
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Badge variant="destructive" className="text-xs">MYTH</Badge>
-                      <span className="text-lg">{item.icon}</span>
-                    </div>
-                    <p className="text-sm text-muted-foreground">{item.myth}</p>
+            {/* Myth 1: AI Consciousness */}
+            <div className="border border-border rounded-lg p-4">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="destructive" className="text-xs">MYTH</Badge>
+                    <span className="text-lg">🧠</span>
                   </div>
-                  <div className="space-y-2">
-                    <div className="flex items-center gap-2">
-                      <Badge variant="default" className="text-xs bg-success text-success-foreground">REALITY</Badge>
-                      <CheckCircle className="h-4 w-4 text-success" />
-                    </div>
-                    <p className="text-sm text-foreground font-medium">{item.reality}</p>
+                  <p className="text-sm text-muted-foreground">
+                    <AudioPronunciation 
+                      word="AI is like a human brain" 
+                      urduText="AI انسانی دماغ کی طرح ہے"
+                    /> with feelings and consciousness
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="default" className="text-xs bg-success text-success-foreground">REALITY</Badge>
+                    <CheckCircle className="h-4 w-4 text-success" />
                   </div>
+                  <p className="text-sm text-foreground font-medium">
+                    <AudioPronunciation 
+                      word="AI is an advanced calculator" 
+                      urduText="AI ایک ایڈوانس کیلکولیٹر ہے"
+                    /> that follows patterns - no emotions or awareness
+                  </p>
                 </div>
               </div>
-            ))}
+            </div>
+
+            {/* Myth 2: Job Replacement */}
+            <div className="border border-border rounded-lg p-4">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="destructive" className="text-xs">MYTH</Badge>
+                    <span className="text-lg">💼</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    <AudioPronunciation 
+                      word="AI will take all our jobs" 
+                      urduText="AI ہماری تمام نوکریاں لے لے گا"
+                    /> and replace humans completely
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="default" className="text-xs bg-success text-success-foreground">REALITY</Badge>
+                    <CheckCircle className="h-4 w-4 text-success" />
+                  </div>
+                  <p className="text-sm text-foreground font-medium">
+                    AI changes work and creates new jobs like{' '}
+                    <AudioPronunciation 
+                      word="AI trainers" 
+                      urduText="AI ٹرینرز"
+                    />, supervisors, and engineers
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Myth 3: Perfect Knowledge */}
+            <div className="border border-border rounded-lg p-4">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="destructive" className="text-xs">MYTH</Badge>
+                    <span className="text-lg">🎯</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    AI knows everything and never makes mistakes
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="default" className="text-xs bg-success text-success-foreground">REALITY</Badge>
+                    <CheckCircle className="h-4 w-4 text-success" />
+                  </div>
+                  <p className="text-sm text-foreground font-medium">
+                    AI only knows what it's trained on and can make errors, especially with local info
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Myth 4: Dangerous AI */}
+            <div className="border border-border rounded-lg p-4">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="destructive" className="text-xs">MYTH</Badge>
+                    <span className="text-lg">🛡️</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    AI is dangerous like in movies (robots taking over)
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="default" className="text-xs bg-success text-success-foreground">REALITY</Badge>
+                    <CheckCircle className="h-4 w-4 text-success" />
+                  </div>
+                  <p className="text-sm text-foreground font-medium">
+                    AI is a helpful tool for education, healthcare, business when used responsibly
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Myth 5: Expert Only */}
+            <div className="border border-border rounded-lg p-4">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="destructive" className="text-xs">MYTH</Badge>
+                    <span className="text-lg">👥</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    Only tech experts and programmers can use AI
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="default" className="text-xs bg-success text-success-foreground">REALITY</Badge>
+                    <CheckCircle className="h-4 w-4 text-success" />
+                  </div>
+                  <p className="text-sm text-foreground font-medium">
+                    Anyone who can type a question can benefit from AI tools
+                  </p>
+                </div>
+              </div>
+            </div>
+
+            {/* Myth 6: English Only */}
+            <div className="border border-border rounded-lg p-4">
+              <div className="grid md:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="destructive" className="text-xs">MYTH</Badge>
+                    <span className="text-lg">🌍</span>
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    AI is only available in English and for foreign countries
+                  </p>
+                </div>
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2">
+                    <Badge variant="default" className="text-xs bg-success text-success-foreground">REALITY</Badge>
+                    <CheckCircle className="h-4 w-4 text-success" />
+                  </div>
+                  <p className="text-sm text-foreground font-medium">
+                    AI works in{' '}
+                    <AudioPronunciation 
+                      word="Urdu" 
+                      urduText="اردو"
+                    />, Hindi, and helps with local Pakistani problems
+                  </p>
+                </div>
+              </div>
+            </div>
           </CardContent>
         </Card>
 
