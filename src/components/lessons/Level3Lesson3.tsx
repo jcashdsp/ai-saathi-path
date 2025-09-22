@@ -347,7 +347,15 @@ const Level3Lesson3 = ({ onComplete, onBack }: Level3Lesson3Props) => {
     if (score >= 70) {
       setShowCompletion(true);
       const timeSpent = Date.now() - startTime;
-      completeLesson('3', 'lesson3', score, timeSpent);
+      const quizResult = {
+        score: score,
+        totalQuestions: 5, // Assuming 5 questions for Level 3 Lesson 3
+        correct: correct,
+        passed: score >= 70,
+        timeSpent,
+        answers: answers || []
+      };
+      completeLesson(3, 'lesson3', quizResult, timeSpent);
     }
   };
 

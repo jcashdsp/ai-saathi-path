@@ -202,7 +202,15 @@ const Level1Lesson5 = ({ onComplete, onBack }: Level1Lesson5Props) => {
     if (score >= 70) {
       setShowCompletion(true);
       const timeSpent = Date.now() - startTime;
-      completeLesson('1', 'lesson5', score, timeSpent);
+      const quizResult = {
+        score: score,
+        totalQuestions: 5, // Assuming 5 questions for Level 1 Lesson 5
+        correct: correct,
+        passed: score >= 70,
+        timeSpent,
+        answers: answers || []
+      };
+      completeLesson(1, 'lesson5', quizResult, timeSpent);
     }
   };
 
