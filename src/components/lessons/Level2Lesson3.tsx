@@ -1,10 +1,123 @@
+import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Separator } from "@/components/ui/separator";
-import { CheckCircle, Clock, Languages, FileText, ArrowLeftRight, Globe } from "lucide-react";
+import { CheckCircle, Clock, Languages, FileText, ArrowLeftRight, Globe, ArrowLeft } from "lucide-react";
+import { MixMatchQuiz } from "@/components/quiz/MixMatchQuiz";
+import { LessonCompletion } from "@/components/LessonCompletion";
+import { level2Lesson3QuizData } from "@/lib/translations";
+import { completeLesson } from "@/lib/progress";
+import BilingualText from "@/components/BilingualText";
 
-const Level2Lesson3 = () => {
+interface Level2Lesson3Props {
+  onComplete: () => void;
+  onBack: () => void;
+}
+
+const Level2Lesson3 = ({ onComplete, onBack }: Level2Lesson3Props) => {
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [quizCompleted, setQuizCompleted] = useState(false);
+  const [quizScore, setQuizScore] = useState(0);
+  const [showCompletion, setShowCompletion] = useState(false);
+  const [startTime] = useState(Date.now());
+
+  const handleQuizComplete = (score: number, correct: number, answers: any[]) => {
+    setQuizScore(score);
+    setQuizCompleted(true);
+    setShowQuiz(false);
+    
+    if (score >= 70) {
+      setShowCompletion(true);
+    } else {
+      // Stay on lesson, show retry option
+      setShowQuiz(false);
+    }
+  };
+
+  const handleLessonComplete = () => {
+    const timeSpent = Date.now() - startTime;
+    const quizResult = {
+      score: quizScore,
+      totalQuestions: level2Lesson3QuizData.length,
+      correct: Math.round((quizScore / 100) * level2Lesson3QuizData.length),
+      passed: quizScore >= 70,
+      timeSpent,
+      answers: [] // Would be populated from actual quiz answers
+    };
+    completeLesson(2, "lesson3", quizResult, timeSpent);
+    onComplete();
+  };
+
+  // Show lesson completion screen
+  if (showCompletion) {
+    return (
+      <LessonCompletion
+        levelId={2}
+        lessonId="lesson3"
+        lessonTitle="Translate & Simplify: AI as Your Helper"
+        score={quizScore}
+        timeSpent={Date.now() - startTime}
+        onContinue={handleLessonComplete}
+        isLastLesson={false}
+      />
+    );
+  }
+
+  // Show quiz
+  if (showQuiz) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="bg-gradient-hero text-primary-foreground">
+          <div className="container mx-auto px-4 py-6">
+            <div className="flex items-center gap-4 mb-4">
+              <Button
+                variant="ghost"
+                onClick={() => setShowQuiz(false)}
+                className="text-primary-foreground hover:text-primary-foreground/80"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Lesson
+              </Button>
+              <Badge variant="outline" className="border-primary-foreground/30 text-primary-foreground">
+                Translation Quiz
+              </Badge>
+            </div>
+            
+            <h1 className="text-2xl md:text-3xl font-bold mb-2">
+              <BilingualText 
+                translation={{
+                  english: "Translation & Simplification Quiz",
+                  urdu: "ترجمہ اور آسان بنانے کا کوئز"
+                }}
+              />
+            </h1>
+            <p className="text-primary-foreground/90 mb-4">
+              <BilingualText 
+                translation={{
+                  english: "Match English phrases with Urdu translations and complex text with simplified versions",
+                  urdu: "انگریزی جملوں کو اردو ترجمے سے اور پیچیدہ متن کو آسان متن سے ملائیں"
+                }}
+              />
+            </p>
+          </div>
+        </div>
+
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-4xl mx-auto">
+            <MixMatchQuiz
+              questions={level2Lesson3QuizData}
+              title="Translation & Simplification Quiz"
+              description="Drag and drop to match the correct pairs."
+              onComplete={handleQuizComplete}
+              passingScore={70}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background py-8">
       <div className="container mx-auto px-4 max-w-4xl">
@@ -362,12 +475,52 @@ const Level2Lesson3 = () => {
           </CardContent>
         </Card>
 
+        {/* Quiz Section */}
+        <Card className="mb-8 border-level-2/20 bg-gradient-to-r from-level-2/5 to-transparent">
+          <CardHeader>
+            <CardTitle className="flex items-center gap-2">
+              <CheckCircle className="h-5 w-5 text-level-2" />
+              Ready for the Quiz?
+            </CardTitle>
+            <CardDescription>
+              Test your understanding with a translation and simplification matching exercise
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <p className="text-muted-foreground">
+              Practice matching English phrases with their Urdu translations and complex text with simplified versions. 
+              You need 70% or higher to complete this lesson.
+            </p>
+            
+            {quizCompleted && quizScore < 70 && (
+              <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
+                <p className="text-sm text-destructive">
+                  Previous attempt: {quizScore}%. You need 70% to pass. Try again!
+                </p>
+              </div>
+            )}
+            
+            {quizCompleted && quizScore >= 70 && (
+              <div className="bg-success/10 border border-success/20 rounded-lg p-4">
+                <p className="text-sm text-success">
+                  Great job! You scored {quizScore}%. Ready to complete the lesson?
+                </p>
+              </div>
+            )}
+
+            <Button onClick={() => setShowQuiz(true)} size="lg" className="w-full">
+              {quizCompleted && quizScore < 70 ? "Retry Quiz" : "Start Translation Quiz"}
+            </Button>
+          </CardContent>
+        </Card>
+
         {/* Navigation */}
         <div className="flex justify-between items-center">
-          <Button variant="outline">
-            ← Previous: How to Ask Questions
+          <Button variant="outline" onClick={onBack}>
+            <ArrowLeft className="h-4 w-4 mr-2" />
+            Previous: How to Ask Questions
           </Button>
-          <Button>
+          <Button onClick={() => setShowQuiz(true)} disabled={!quizCompleted || quizScore < 70}>
             Next: Shopkeeper Ad Project →
           </Button>
         </div>

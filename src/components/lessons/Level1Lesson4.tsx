@@ -4,6 +4,11 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Progress } from "@/components/ui/progress";
 import { ArrowLeft, ArrowRight, CheckCircle, Shield, AlertTriangle, Lock, Eye } from "lucide-react";
+import { MultipleChoiceQuiz } from "@/components/quiz/MultipleChoiceQuiz";
+import { LessonCompletion } from "@/components/LessonCompletion";
+import { level1Lesson4QuizData } from "@/lib/translations";
+import { completeLesson } from "@/lib/progress";
+import BilingualText from "@/components/BilingualText";
 
 interface Level1Lesson4Props {
   onComplete: () => void;
@@ -13,6 +18,11 @@ interface Level1Lesson4Props {
 const Level1Lesson4 = ({ onComplete, onBack }: Level1Lesson4Props) => {
   const [currentStep, setCurrentStep] = useState(0);
   const [completedSteps, setCompletedSteps] = useState<number[]>([]);
+  const [showQuiz, setShowQuiz] = useState(false);
+  const [quizCompleted, setQuizCompleted] = useState(false);
+  const [quizScore, setQuizScore] = useState(0);
+  const [showCompletion, setShowCompletion] = useState(false);
+  const [startTime] = useState(Date.now());
 
   const steps = [
     {
@@ -123,6 +133,12 @@ const Level1Lesson4 = ({ onComplete, onBack }: Level1Lesson4Props) => {
     },
     {
       id: 6,
+      title: "Security Quiz",
+      content: "Test your internet safety knowledge",
+      type: "quiz"
+    },
+    {
+      id: 7,
       title: "Congratulations!",
       content: "You're now equipped with essential internet safety skills",
       type: "completion"
@@ -136,11 +152,49 @@ const Level1Lesson4 = ({ onComplete, onBack }: Level1Lesson4Props) => {
       setCompletedSteps([...completedSteps, currentStep]);
     }
     
+    if (currentStep === 6) { // Quiz step
+      setShowQuiz(true);
+      return;
+    }
+    
     if (currentStep < steps.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
-      onComplete();
+      if (quizCompleted && quizScore >= 70) {
+        setShowCompletion(true);
+      } else {
+        // Go back to quiz if not passed
+        setCurrentStep(6);
+        setShowQuiz(true);
+      }
     }
+  };
+
+  const handleQuizComplete = (score: number, correct: number, answers: any[]) => {
+    setQuizScore(score);
+    setQuizCompleted(true);
+    setShowQuiz(false);
+    
+    if (score >= 70) {
+      setCurrentStep(currentStep + 1); // Move to completion step
+    } else {
+      // Stay on quiz step, show retry option
+      setCurrentStep(6);
+    }
+  };
+
+  const handleLessonComplete = () => {
+    const timeSpent = Date.now() - startTime;
+    const quizResult = {
+      score: quizScore,
+      totalQuestions: level1Lesson4QuizData.length,
+      correct: Math.round((quizScore / 100) * level1Lesson4QuizData.length),
+      passed: quizScore >= 70,
+      timeSpent,
+      answers: [] // Would be populated from actual quiz answers
+    };
+    completeLesson(1, "lesson4", quizResult, timeSpent);
+    onComplete();
   };
 
   const handlePrevious = () => {
@@ -150,6 +204,75 @@ const Level1Lesson4 = ({ onComplete, onBack }: Level1Lesson4Props) => {
   };
 
   const currentStepData = steps[currentStep];
+
+  // Show lesson completion screen
+  if (showCompletion) {
+    return (
+      <LessonCompletion
+        levelId={1}
+        lessonId="lesson4"
+        lessonTitle="Internet Safety Basics"
+        score={quizScore}
+        timeSpent={Date.now() - startTime}
+        onContinue={handleLessonComplete}
+        isLastLesson={true}
+      />
+    );
+  }
+
+  // Show quiz
+  if (showQuiz) {
+    return (
+      <div className="min-h-screen bg-background">
+        <div className="bg-gradient-hero text-primary-foreground">
+          <div className="container mx-auto px-4 py-6">
+            <div className="flex items-center gap-4 mb-4">
+              <Button
+                variant="ghost"
+                onClick={() => setShowQuiz(false)}
+                className="text-primary-foreground hover:text-primary-foreground/80"
+              >
+                <ArrowLeft className="h-4 w-4 mr-2" />
+                Back to Lesson
+              </Button>
+              <Badge variant="outline" className="border-primary-foreground/30 text-primary-foreground">
+                Internet Safety Quiz
+              </Badge>
+            </div>
+            
+            <h1 className="text-2xl md:text-3xl font-bold mb-2">
+              <BilingualText 
+                translation={{
+                  english: "Internet Safety Quiz",
+                  urdu: "انٹرنیٹ سیفٹی کوئز"
+                }}
+              />
+            </h1>
+            <p className="text-primary-foreground/90 mb-4">
+              <BilingualText 
+                translation={{
+                  english: "Test your knowledge of passwords, scams, and safe browsing",
+                  urdu: "پاس ورڈ، دھوکہ دہی اور محفوظ براؤزنگ کے بارے میں اپنے علم کا امتحان"
+                }}
+              />
+            </p>
+          </div>
+        </div>
+
+        <div className="container mx-auto px-4 py-8">
+          <div className="max-w-4xl mx-auto">
+            <MultipleChoiceQuiz
+              questions={level1Lesson4QuizData}
+              title="Internet Safety Quiz"
+              description="Choose the best answer for each security scenario."
+              onComplete={handleQuizComplete}
+              passingScore={70}
+            />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-background">
@@ -329,6 +452,31 @@ const Level1Lesson4 = ({ onComplete, onBack }: Level1Lesson4Props) => {
                 </div>
               )}
 
+              {currentStepData.type === "quiz" && (
+                <div className="text-center space-y-4">
+                  <div className="text-6xl">🛡️</div>
+                  <h3 className="text-xl font-semibold">Security Knowledge Quiz</h3>
+                  <p className="text-muted-foreground">
+                    Test your understanding of passwords, scams, and safe internet practices. 
+                    You need 70% or higher to complete Level 1.
+                  </p>
+                  {quizCompleted && quizScore < 70 && (
+                    <div className="bg-destructive/10 border border-destructive/20 rounded-lg p-4">
+                      <p className="text-sm text-destructive">
+                        Previous attempt: {quizScore}%. You need 70% to pass. Review and try again!
+                      </p>
+                    </div>
+                  )}
+                  {quizCompleted && quizScore >= 70 && (
+                    <div className="bg-success/10 border border-success/20 rounded-lg p-4">
+                      <p className="text-sm text-success">
+                        Excellent! You scored {quizScore}%. Ready to complete Level 1?
+                      </p>
+                    </div>
+                  )}
+                </div>
+              )}
+
               {currentStepData.type === "completion" && (
                 <div className="text-center space-y-4">
                   <CheckCircle className="h-16 w-16 text-success mx-auto" />
@@ -360,8 +508,9 @@ const Level1Lesson4 = ({ onComplete, onBack }: Level1Lesson4Props) => {
             </Button>
             
             <Button onClick={handleNext}>
-              {currentStep === steps.length - 1 ? "Complete Level 1" : "Next"}
-              {currentStep < steps.length - 1 && <ArrowRight className="h-4 w-4 ml-2" />}
+              {currentStep === 6 ? "Start Security Quiz" : 
+               currentStep === steps.length - 1 ? "Complete Level 1" : "Next"}
+              {currentStep < steps.length - 1 && currentStep !== 6 && <ArrowRight className="h-4 w-4 ml-2" />}
             </Button>
           </div>
         </div>

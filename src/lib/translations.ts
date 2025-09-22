@@ -83,6 +83,180 @@ export const translations = {
   }
 };
 
+// Quiz Data
+export const level1Lesson2QuizData = [
+  {
+    id: "q1-l1l2",
+    question: "Double-clicking on a word will select the entire word.",
+    correct: true,
+    explanation: "Double-clicking is a quick way to select an entire word without dragging.",
+    context: "Text Selection"
+  },
+  {
+    id: "q2-l1l2", 
+    question: "The keyboard shortcut Ctrl+V is used to copy text.",
+    correct: false,
+    explanation: "Ctrl+V is used to paste text. Ctrl+C is used to copy text.",
+    context: "Copy & Paste"
+  },
+  {
+    id: "q3-l1l2",
+    question: "Using exact phrases in \"quotation marks\" makes internet searches more specific.",
+    correct: true,
+    explanation: "Quotation marks tell search engines to look for the exact phrase, making results more precise.",
+    context: "Internet Search"
+  },
+  {
+    id: "q4-l1l2",
+    question: "Ctrl+Z is used to paste previously copied text.",
+    correct: false, 
+    explanation: "Ctrl+Z is used to undo the last action. Ctrl+V is used to paste text.",
+    context: "Keyboard Shortcuts"
+  },
+  {
+    id: "q5-l1l2",
+    question: "Triple-clicking selects an entire paragraph.",
+    correct: true,
+    explanation: "Triple-clicking is a quick way to select an entire paragraph at once.",
+    context: "Text Selection"
+  }
+];
+
+export const level1Lesson4QuizData = [
+  {
+    id: "q1-l1l4",
+    question: "What makes a password strong?",
+    options: [
+      "Using your name and birthday", 
+      "Using at least 8 characters with mix of letters, numbers, and symbols",
+      "Using the same password for all accounts",
+      "Using only lowercase letters"
+    ],
+    correctAnswer: 1,
+    explanation: "Strong passwords need length and complexity - mixing uppercase, lowercase, numbers, and symbols makes them harder to guess.",
+    context: "Password Security"
+  },
+  {
+    id: "q2-l1l4",
+    question: "You receive an SMS saying \"You won ₨50,000 in lottery! Send bank details to claim.\" What should you do?",
+    options: [
+      "Send your bank details immediately",
+      "Call the number to verify",
+      "Delete the message - you can't win a lottery you didn't enter", 
+      "Share the news with friends first"
+    ],
+    correctAnswer: 2,
+    explanation: "Legitimate lotteries don't contact random winners via SMS. This is a common scam to steal bank information.",
+    context: "Scam Recognition"
+  },
+  {
+    id: "q3-l1l4", 
+    question: "When is it safe to enter your password on a website?",
+    options: [
+      "Only on websites that start with https://",
+      "On any website that looks official", 
+      "When the website asks nicely",
+      "Only when using Internet Explorer"
+    ],
+    correctAnswer: 0,
+    explanation: "HTTPS (the 's' stands for secure) encrypts data between you and the website, protecting your password from hackers.",
+    context: "Safe Browsing"
+  },
+  {
+    id: "q4-l1l4",
+    question: "What should you do if you receive a call saying \"Your computer has a virus, give us remote access\"?",
+    options: [
+      "Give them access to fix the problem",
+      "Hang up immediately - legitimate tech companies don't make such calls",
+      "Ask for their company details first",
+      "Transfer them to a tech-savvy family member"
+    ],
+    correctAnswer: 1,
+    explanation: "Real tech companies like Microsoft or Google never call customers randomly about viruses. This is a common scam.",
+    context: "Tech Support Scams"
+  },
+  {
+    id: "q5-l1l4",
+    question: "Which password is strongest?",
+    options: [
+      "ahmed123",
+      "Pakistan1947", 
+      "Blue$Car7@Night",
+      "password"
+    ],
+    correctAnswer: 2,
+    explanation: "Blue$Car7@Night is strong because it's long, uses mixed case, numbers, symbols, and isn't based on personal information.",
+    context: "Password Examples"
+  }
+];
+
+export const level2Lesson3QuizData = [
+  {
+    id: "q1-l2l3",
+    title: "Basic Translation Practice",
+    instructions: "Match the English phrases with their correct Urdu translations",
+    pairs: [
+      {
+        id: "pair1",
+        left: "Good morning",
+        right: "صبح بخیر",
+        explanation: "A common daily greeting"
+      },
+      {
+        id: "pair2", 
+        left: "Thank you very much",
+        right: "بہت شکریہ",
+        explanation: "Polite expression of gratitude"
+      },
+      {
+        id: "pair3",
+        left: "Please wait a moment",
+        right: "براہ کرم ایک منٹ انتظار کریں",
+        explanation: "Courteous request for patience"
+      },
+      {
+        id: "pair4",
+        left: "Your order is ready",
+        right: "آپ کا آرڈر تیار ہے", 
+        explanation: "Common business communication"
+      }
+    ],
+    context: "Daily Communication"
+  },
+  {
+    id: "q2-l2l3",
+    title: "Text Simplification",
+    instructions: "Match complex text with simplified versions",
+    pairs: [
+      {
+        id: "simple1",
+        left: "Hypertension requires immediate medical attention",
+        right: "ہائی بلڈ پریشر کا فوری علاج ضروری ہے",
+        explanation: "Medical term simplified for patients"
+      },
+      {
+        id: "simple2",
+        left: "Documentation must be submitted prior to deadline",
+        right: "کاغذات آخری تاریخ سے پہلے جمع کریں",
+        explanation: "Formal instruction made clear"
+      },
+      {
+        id: "simple3",
+        left: "Device storage capacity has been exceeded",
+        right: "فون کی میموری بھر گئی ہے",
+        explanation: "Technical message in simple terms"
+      },
+      {
+        id: "simple4",
+        left: "Authentication credentials are required",
+        right: "پاس ورڈ درکار ہے",
+        explanation: "Tech jargon simplified"
+      }
+    ],
+    context: "Simplification Practice"
+  }
+];
+
 export const getTranslation = (translation: Translation, language: 'english' | 'urdu' | 'bilingual'): string => {
   if (language === 'english') return translation.english;
   if (language === 'urdu') return translation.urdu;
