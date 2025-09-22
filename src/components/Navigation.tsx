@@ -1,16 +1,20 @@
 import { Button } from "@/components/ui/button";
 import { Menu, X, BookOpen, Users, Trophy, Settings } from "lucide-react";
 import { useState } from "react";
+import LanguageToggle from "@/components/LanguageToggle";
+import { useLanguage } from "@/contexts/LanguageContext";
+import { translations, getTranslation } from "@/lib/translations";
 
 const Navigation = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { language } = useLanguage();
 
   const toggleMenu = () => setIsOpen(!isOpen);
 
   const navItems = [
-    { name: "Courses", href: "/courses", icon: BookOpen },
-    { name: "Community", href: "/community", icon: Users },
-    { name: "Progress", href: "/progress", icon: Trophy },
+    { name: getTranslation(translations.nav.courses, language), href: "/courses", icon: BookOpen },
+    { name: getTranslation(translations.nav.community, language), href: "/community", icon: Users },
+    { name: getTranslation(translations.nav.progress, language), href: "/progress", icon: Trophy },
   ];
 
   return (
@@ -49,11 +53,12 @@ const Navigation = () => {
 
           {/* Desktop CTA */}
           <div className="hidden md:flex items-center space-x-4">
+            <LanguageToggle />
             <Button variant="ghost" size="sm" onClick={() => window.location.href = '/auth'}>
-              Login
+              {getTranslation(translations.nav.login, language)}
             </Button>
             <Button size="sm" onClick={() => window.location.href = '/auth'}>
-              Sign Up Free
+              {getTranslation(translations.nav.signUpFree, language)}
             </Button>
           </div>
 
@@ -87,11 +92,14 @@ const Navigation = () => {
             })}
             
             <div className="pt-4 space-y-2 border-t border-border">
+              <div className="pb-2">
+                <LanguageToggle />
+              </div>
               <Button variant="ghost" size="sm" className="w-full justify-start">
-                Login
+                {getTranslation(translations.nav.login, language)}
               </Button>
               <Button size="sm" className="w-full">
-                Sign Up Free
+                {getTranslation(translations.nav.signUpFree, language)}
               </Button>
             </div>
           </div>
